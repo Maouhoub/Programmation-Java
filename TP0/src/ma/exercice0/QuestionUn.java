@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 /**
  * @author MUSTAPHA
- * classe QuestionUn : calculer les n premiers terms
+ * classe QuestionUn : calculer la somme des n premiers terms
  * d'une série harmonique.
  */
 public class QuestionUn 
