@@ -1,16 +1,15 @@
 package ma.jeunavale;
 
+
 /**
  * @author MUSTAPHA
  * classe Case : représente une case de la grille d'un joueur
  */
-
- 
 public class Case 
 {  
-	/**
-    *champ privé etat : boolean, si vaut true la case est touché ou non touché s'il vaut false
-    */
+        /**
+         *champ privé etat : boolean, si vaut true la case est touché ou non touché s'il vaut false
+         */
 	private boolean etat;
 	
 	/**
