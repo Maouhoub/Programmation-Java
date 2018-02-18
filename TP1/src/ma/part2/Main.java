@@ -6,7 +6,12 @@ package ma.part2;
  *
  */
 public class Main 
-{
+{  	
+	
+	/**
+    	 * Methode executable qui lance une nouvelle partie.
+    	 * @param args : args Les parametres de la ligne de commande.
+   	 */
 	public static void main(String[] args)
 	{   
 		Fraction fr1 = new Fraction(1, 2);
