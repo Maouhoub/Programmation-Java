@@ -24,7 +24,7 @@ public class QuestionUn
 			somme += 1/(double)i;
 		}
 		
-		System.out.println("la somme des "+n+" premiers terms de la serie harmonique vaut : "+somme);
+		System.out.println("la somme des " + n + " premiers terms de la serie harmonique vaut : " + somme);
 	}
 
 }
