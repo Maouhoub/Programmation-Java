@@ -37,7 +37,8 @@ public class Bateau
 	 */
 	public Bateau(int taille)
 	{   
-		//on suppose que 0 <= taille <= 10
+		//on suppose que 0 <= taille <= 10, on peut créer une classe TailleInacceptableException .
+		
 		this.taille = taille;
 		this.cases = new Case[taille];
 	}
@@ -74,13 +75,14 @@ public class Bateau
 	public void ajouteCase(Case c)
 	{
 		int ajoutee = 0;
-		for(int i = 0; i < this.cases.length ; i++)
+		for(int i = 0; i < this.cases.length; i++)
 		{
 			if(this.cases[i] == null) 
 		
 				{
 					this.cases[i] = c;
 					//System.out.println("Ajoutee");
+					c.setBateau(this);
 					ajoutee = 1;
 					break;
 				}

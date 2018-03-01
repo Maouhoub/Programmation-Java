@@ -61,21 +61,75 @@ public class Joueur
 		while( (n < 0) || (n >= this.bateaux.length) )
 		{	
 			System.out.println("Veuillez entrer l'indice du bateau!");
-			//ici on peut faire une exception pour s'assurer que l'entrée est entière
+			//ici on peut faire une exception pour éviter pour capturer une exception éventuelle.
 			n = input.nextInt();
 		}
 			Bateau bateau = this.bateaux[n];
 			//utilisation de la méthode utilitaire ci dessous
 			this.afficheChoixOrientation(bateau, input);
 			//utilisation d'une autre méthode : 
-			System.out.println("entrer l'indice de la case à positionner du tableau!");
-			int indice = input.nextInt();
-			Case caseReference = bateau.getCases()[indice];
-		    System.out.println("entrer l'abscisse et l'ordonnée de la case dans la grille");
+			
+			Case caseReference = bateau.getCases()[0];
+		    System.out.println("entrer l'abscisse et l'ordonnée de la tete de votre bateau dans la grille");
 		    int x = input.nextInt();
 		    int y = input.nextInt();
-		    this.grille.getGrille()[x][y] = caseReference;
-		    // à terminer plus tard
+		    Case[][] tempGrille = this.grille.getGrille();
+		    tempGrille[x][y] = caseReference;
+		    if(bateau.horizontal)
+		    {
+		    	if(bateau.getTaille() <= Math.min(y, 10 - y ))
+		    	{
+		    		//System.out.print("Choix soit à droite soit à gauche!");
+		    		this.orieterManH(bateau, input, x, y);
+		    		this.testMethod(bateau);
+		    	}
+		    	else
+		    	{
+		    		if(y == Math.min(y, 10-y))
+		    		{
+		    			this.placerAdroite(bateau, x, y);
+		    			this.testMethod(bateau);
+		    			//System.out.println("placer à droite");
+		    		}
+		    		else
+		    		{	
+		    			
+		    			//System.out.println("placer à gauche");
+		    			this.placerAgauche(bateau, x, y);
+		    			this.testMethod(bateau);
+		    			
+		    		}
+		    	}
+		    	
+		    }
+		    else
+		    {
+		    	if(bateau.getTaille() <= Math.min(x, 10 - x ))
+		    	{
+		    		//System.out.print("Choix soit vers le haut/bas!");
+		    		  this.orieterManV(bateau, input, x, y);
+		    		  this.testMethod(bateau);
+		    	}
+		    	else
+		    	{
+		    		if(x == Math.min(x, 10-x))
+		    		{
+		    			this.placerVersBas(bateau, x, y);
+		    			this.testMethod(bateau);
+		    			//System.out.println("soit vers le bas!");
+		    		}
+		    		else
+		    		{	
+		    			
+		    			//System.out.println("placer vers le haut");
+		    			 this.placerVersHaut(bateau, x, y);
+		    			 this.testMethod(bateau);
+		    			
+		    		}
+		    	}
+		    	
+		    }
+		    
 			
 			
 			
@@ -117,7 +171,109 @@ public class Joueur
 		else this.afficheChoixOrientation(bateau, input);
 	}
 	
-
+	private void orieterManH(Bateau bateau, Scanner input, int x, int y)
+	{   
+		System.out.println("Entrer 1 ou 2 pour orienter le bateau  :\n1 vers la gauche \n2 vers la droite");
+		int choixOrientation = input.nextInt();
+		
+		if(choixOrientation == 1)
+				this.placerAgauche(bateau, x, y);
+		else if (choixOrientation == 2)
+				this.placerAdroite(bateau, x, y);
+		else this.afficheChoixOrientation(bateau, input);
+	}
 	
+	private void orieterManV(Bateau bateau, Scanner input, int x, int y)
+	{   
+		System.out.println("Entrer 1 ou 2 pour orienter le bateau  :\n1 vers le bas \n2 vers le haut");
+		int choixOrientation = input.nextInt();
+		
+		if(choixOrientation == 1)
+				this.placerVersBas(bateau, x, y);
+		else if (choixOrientation == 2)
+				this.placerVersHaut(bateau, x, y);
+		else this.afficheChoixOrientation(bateau, input);
+		
+	}
+	
+	
+	
+   private void placerAdroite(Bateau bateau, int x, int y)
+   {
+	   Case[][] grille = this.grille.getGrille();
+	   int i = 0, j = y;
+	   while(i < bateau.getTaille())
+	   {
+		   grille[x][j] = bateau.getCases()[i];
+		   i++; j++;
+	   }
+	  
+	   
+   }
+   
+   private void placerVersBas(Bateau bateau, int x, int y)
+   {
+	   Case[][] grille = this.grille.getGrille();
+	   int i = x, j = 0;
+	   while(j < bateau.getTaille())
+	   {
+		   grille[i][y] = bateau.getCases()[j];
+		   i++; j++;
+	   }
+	  
+	   
+   }
+   
+   private void placerAgauche(Bateau bateau, int x, int y)
+   {
+	   Case[][] grille = this.grille.getGrille();
+	   int i = 0, j = y;
+	   while(i < bateau.getTaille())
+	   {
+		   grille[x][j] = bateau.getCases()[i];
+		   i++; j--;
+	   }
+	  
+	   
+   }
+   
+   private void placerVersHaut(Bateau bateau, int x, int y)
+   {
+	   Case[][] grille = this.grille.getGrille();
+	   int i = x, j = 0;
+	   while(j < bateau.getTaille())
+	   {
+		   grille[i][y] = bateau.getCases()[j];
+		   i--; j++;
+	   }
+	  
+	   
+   }
+   //méthode pour afficher le bateau, pour vérifier si on a bien construit la méthode emplacement du bateau.
+   private void testMethod(Bateau bateau)
+   {     Case[][] grille = this.grille.getGrille();
+	   
+			for(int i = 0; i < 10; i++)
+			{
+				for(int j = 0; j < 10; j++)
+				{  Case b = grille[i][j];
+					/* if(b.etat)
+						{System.out.print("o ");
+						 continue;}*/
+				     if(b.getBateau() == bateau)
+				     {
+				    	 System.out.print("b ");
+				     }
+				     else
+				     {
+				    	 System.out.print("x ");
+				     }
+						
+				}
+				System.out.println();
+			
+		
+			}
+   }
 
 }
