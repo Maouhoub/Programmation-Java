@@ -43,6 +43,7 @@ public class Joueur
 	{
 		this.nom = nom;
 		this.grille = new Grille();
+		
 		this.grille.setJoueur(this);
 		
 	}
@@ -55,9 +56,12 @@ public class Joueur
 		return grille;
 	}
 	
-	public void tir(int x, int y)
+	public void tir(Grille grille)
 	{
-		Case c = this.grille.getGrille()[x][y];
+		Scanner input = new Scanner(System.in);
+		System.out.println("Entrer les coordonnées de votre but");
+		int x = input.nextInt(), y = input.nextInt();
+		Case c = grille.getGrille()[x][y];
 		boolean r = c.etat;
 		if(!r) c.etat = !r;
 	}

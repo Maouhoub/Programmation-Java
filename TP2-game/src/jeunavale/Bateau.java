@@ -7,15 +7,15 @@ import java.util.Arrays;
  * @author MUSTAPHA
  *
  */
-public  class Bateau 
+public abstract class  Bateau 
 {   /**
      *champ private int : nombre des cases de ce Bateau
      */
-	private int taille;
+	protected int taille;
 	
-	private boolean place = false;
+	protected boolean place = false;
 	
-	protected String Symbole ;
+	protected String Symbole = "b";
 	
 	/**
 	 * boolean indiquant l'orientation verticale(true) ou verticale
@@ -25,7 +25,7 @@ public  class Bateau
 	/**
 	 * instance de classe vector
 	 */
-	private Case[] cases  ;
+	protected Case[] cases  ;
 	
 	/**
 	 * constructeur par défaut
@@ -45,7 +45,7 @@ public  class Bateau
 		
 		this.taille = taille;
 		this.cases = new Case[taille];
-		//for(Case c : this.cases) {c = new Case(); c.setBateau(this);}
+		for(int i = 0; i < taille ; i++)this.ajouteCase(new Case());
 		
 	}
 
@@ -83,26 +83,8 @@ public  class Bateau
 	 * ajouter une case à ce bateau, s'il y'en a de place.
 	 * @param c : instance de case à ajouter.
 	 */
-	public void ajouteCase(Case c)
-	{
-		int ajoutee = 0;
-		for(int i = 0; i < this.cases.length; i++)
-		{
-			if(this.cases[i] == null) 
-		
-				{
-					this.cases[i] = c;
-					System.out.println("Ajoutee");
-					c.setBateau(this);
-					ajoutee = 1;
-					break;
-				}
-		}
-		if(ajoutee == 0) System.out.println("Pas de place!");
-		
-		
-		
-	}
+	public abstract void ajouteCase(Case c);
+
 
 	/**
 	 * récupérer le tableau de cases de cet instance de Bateau
@@ -149,7 +131,7 @@ public  class Bateau
 		return true;
 	}
 
-	//public abstract String getSymbole();
+	public abstract String getSymbole();
 	
 	
 	

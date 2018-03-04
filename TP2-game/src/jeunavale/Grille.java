@@ -120,7 +120,7 @@ public class Grille
 							
 					     if(b.getBateau() != null)
 					     {
-					    	 System.out.print("b ");
+					    	 System.out.print(b.getBateau().getSymbole() + " ");
 					     }
 					     else
 					     {
