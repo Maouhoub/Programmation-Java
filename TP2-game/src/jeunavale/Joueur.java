@@ -9,20 +9,21 @@ import java.util.Scanner;
  */
 public class Joueur 
 {  
+	public static final int NB_DESTROYEURS = 1, NB_CROISEURS = 1, NB_PORTEAVIONS = 1;
 	/**
     *
     *champ privé nom : objet String représentant le nom du joueur
     */
 	public String nom;
 	/**
-	 * 
+	 * champ private : instance de Grille (grille du joueur).
 	 */
-	private Grille grille;
+	protected Grille grille;
 	
 	/**
 	 * champ private bateaux des joueurs
 	 */
-	private Bateau[] bateaux;
+	protected Bateau[] bateaux = new Bateau[ NB_DESTROYEURS + NB_CROISEURS + NB_PORTEAVIONS ] ;
 	
 	/**
 	 * constructeur par défaut
@@ -42,6 +43,8 @@ public class Joueur
 	{
 		this.nom = nom;
 		this.grille = new Grille();
+		this.grille.setJoueur(this);
+		
 	}
 
 	/**
@@ -51,11 +54,20 @@ public class Joueur
 	public Grille getGrille() {
 		return grille;
 	}
+	
+	public void tir(int x, int y)
+	{
+		Case c = this.grille.getGrille()[x][y];
+		boolean r = c.etat;
+		if(!r) c.etat = !r;
+	}
     /**
      * choisir le bateau, la position et l'orientation d'un bateau. 
      */
-	public void placementBateau()
+	public void placementBateaux()
 	{
+		for(int i = 0; i < this.bateaux.length ; i++)
+		{
 		Scanner input = new Scanner(System.in);
 		int n = -1;
 		while( (n < 0) || (n >= this.bateaux.length) )
@@ -63,8 +75,9 @@ public class Joueur
 			System.out.println("Veuillez entrer l'indice du bateau!");
 			//ici on peut faire une exception pour éviter pour capturer une exception éventuelle.
 			n = input.nextInt();
+			if(this.bateaux[n].isPlace()) {System.out.println("bateau deja place");n = -1;}
 		}
-			Bateau bateau = this.bateaux[n];
+			Bateau bateau = this.bateaux[n]; this.bateaux[n].setPlace(true);
 			//utilisation de la méthode utilitaire ci dessous
 			this.afficheChoixOrientation(bateau, input);
 			//utilisation d'une autre méthode : 
@@ -73,30 +86,30 @@ public class Joueur
 		    System.out.println("entrer l'abscisse et l'ordonnée de la tete de votre bateau dans la grille");
 		    int x = input.nextInt();
 		    int y = input.nextInt();
-		    Case[][] tempGrille = this.grille.getGrille();
-		    tempGrille[x][y] = caseReference;
+		   
+		    this.grille.getGrille()[x][y] = caseReference;
 		    if(bateau.horizontal)
 		    {
 		    	if(bateau.getTaille() <= Math.min(y, 10 - y ))
 		    	{
-		    		//System.out.print("Choix soit à droite soit à gauche!");
+		    		System.out.print("Choix soit à droite soit à gauche!");
 		    		this.orieterManH(bateau, input, x, y);
-		    		this.testMethod(bateau);
+		    		//this.testMethod(bateau);
 		    	}
 		    	else
 		    	{
 		    		if(y == Math.min(y, 10-y))
 		    		{
 		    			this.placerAdroite(bateau, x, y);
-		    			this.testMethod(bateau);
-		    			//System.out.println("placer à droite");
+		    			//this.testMethod(bateau);
+		    			System.out.println("placer à droite");
 		    		}
 		    		else
 		    		{	
 		    			
-		    			//System.out.println("placer à gauche");
+		    			System.out.println("placer à gauche");
 		    			this.placerAgauche(bateau, x, y);
-		    			this.testMethod(bateau);
+		    			//this.testMethod(bateau);
 		    			
 		    		}
 		    	}
@@ -106,36 +119,45 @@ public class Joueur
 		    {
 		    	if(bateau.getTaille() <= Math.min(x, 10 - x ))
 		    	{
-		    		//System.out.print("Choix soit vers le haut/bas!");
+		    		System.out.print("Choix soit vers le haut/bas!");
 		    		  this.orieterManV(bateau, input, x, y);
-		    		  this.testMethod(bateau);
+		    		  //this.testMethod(bateau);
 		    	}
 		    	else
 		    	{
 		    		if(x == Math.min(x, 10-x))
 		    		{
 		    			this.placerVersBas(bateau, x, y);
-		    			this.testMethod(bateau);
-		    			//System.out.println("soit vers le bas!");
+		    			//this.testMethod(bateau);
+		    			System.out.println("soit vers le bas!");
 		    		}
 		    		else
 		    		{	
 		    			
-		    			//System.out.println("placer vers le haut");
+		    			System.out.println("placer vers le haut");
 		    			 this.placerVersHaut(bateau, x, y);
-		    			 this.testMethod(bateau);
+		    			// this.testMethod(bateau);
 		    			
 		    		}
 		    	}
 		    	
 		    }
-		    
-			
-			
-			
-			
-		
-		
+		}
+		     
+	}
+	
+	public boolean aPerdu()
+	{   boolean isGameOver = true;
+		for(Bateau bateau : this.bateaux)
+        {   int i = 0;
+			for(i = 0; i < bateau.getCases().length; i++)
+			{
+				if(bateau.getCases()[i].etat) break;
+			}
+			if(i == bateau.getCases().length) {isGameOver = false; break;}
+        }
+		return isGameOver;
+	
 	}
 
 	/**
@@ -159,7 +181,7 @@ public class Joueur
 	 * @param bateau : le bateau en question dans le context d'appel
 	 * @param input : objet Scanner pour lire les entrées de l'utilisateur
 	 */
-	private void afficheChoixOrientation(Bateau bateau, Scanner input)
+	protected void afficheChoixOrientation(Bateau bateau, Scanner input)
 	{   
 		System.out.println("Entrer 1 ou 2 pour orienter le bateau choisi :\n1 pour horizontale \n2 pour verticale");
 		int choixOrientation = input.nextInt();
@@ -171,7 +193,7 @@ public class Joueur
 		else this.afficheChoixOrientation(bateau, input);
 	}
 	
-	private void orieterManH(Bateau bateau, Scanner input, int x, int y)
+	protected void orieterManH(Bateau bateau, Scanner input, int x, int y)
 	{   
 		System.out.println("Entrer 1 ou 2 pour orienter le bateau  :\n1 vers la gauche \n2 vers la droite");
 		int choixOrientation = input.nextInt();
@@ -183,7 +205,7 @@ public class Joueur
 		else this.afficheChoixOrientation(bateau, input);
 	}
 	
-	private void orieterManV(Bateau bateau, Scanner input, int x, int y)
+	protected void orieterManV(Bateau bateau, Scanner input, int x, int y)
 	{   
 		System.out.println("Entrer 1 ou 2 pour orienter le bateau  :\n1 vers le bas \n2 vers le haut");
 		int choixOrientation = input.nextInt();
@@ -198,82 +220,99 @@ public class Joueur
 	
 	
 	
-   private void placerAdroite(Bateau bateau, int x, int y)
+   protected void placerAdroite(Bateau bateau, int x, int y)
    {
-	   Case[][] grille = this.grille.getGrille();
+	 
 	   int i = 0, j = y;
 	   while(i < bateau.getTaille())
 	   {
-		   grille[x][j] = bateau.getCases()[i];
+		   this.grille.getGrille()[x][j] = bateau.getCases()[i];
 		   i++; j++;
 	   }
 	  
 	   
    }
    
-   private void placerVersBas(Bateau bateau, int x, int y)
+   protected void placerVersBas(Bateau bateau, int x, int y)
    {
-	   Case[][] grille = this.grille.getGrille();
+	   
 	   int i = x, j = 0;
 	   while(j < bateau.getTaille())
 	   {
-		   grille[i][y] = bateau.getCases()[j];
+		   this.grille.getGrille()[i][y] = bateau.getCases()[j];
 		   i++; j++;
 	   }
 	  
 	   
    }
    
-   private void placerAgauche(Bateau bateau, int x, int y)
+   protected void placerAgauche(Bateau bateau, int x, int y)
    {
-	   Case[][] grille = this.grille.getGrille();
+	   //Case[][] grille = this.grille.getGrille();
 	   int i = 0, j = y;
 	   while(i < bateau.getTaille())
 	   {
-		   grille[x][j] = bateau.getCases()[i];
+		   this.grille.getGrille()[x][j] = bateau.getCases()[i];
 		   i++; j--;
 	   }
 	  
 	   
    }
    
-   private void placerVersHaut(Bateau bateau, int x, int y)
+   protected void placerVersHaut(Bateau bateau, int x, int y)
    {
-	   Case[][] grille = this.grille.getGrille();
+	   
 	   int i = x, j = 0;
 	   while(j < bateau.getTaille())
 	   {
-		   grille[i][y] = bateau.getCases()[j];
+		   this.grille.getGrille()[i][y] = bateau.getCases()[j];
 		   i--; j++;
 	   }
 	  
 	   
    }
-   //méthode pour afficher le bateau, pour vérifier si on a bien construit la méthode emplacement du bateau.
-   private void testMethod(Bateau bateau)
-   {     Case[][] grille = this.grille.getGrille();
-	   
-			for(int i = 0; i < 10; i++)
-			{
-				for(int j = 0; j < 10; j++)
-				{  Case b = grille[i][j];
-					/* if(b.etat)
-						{System.out.print("o ");
-						 continue;}*/
-				     if(b.getBateau() == bateau)
-				     {
-				    	 System.out.print("b ");
-				     }
-				     else
-				     {
-				    	 System.out.print("x ");
-				     }
-						
-				}
-				System.out.println();
+   //*****
+	/*  public void affiche()
+	   {     
+	
+	//	for(int i = 0; i < SIZE; i++) {for(int j = 0; j < SIZE; j++ )cases[i][j] = new Case();}
+		 
+		 for(Bateau bateau : this.getBateaux())
+		  {  
+		   if(bateau.estCoule()) 
+			  {
+				  for(Case c : bateau.getCases()) c.etat = true;
+			  }
+		  
+		  }
+				
+			   for(Case[] cas :this.grille.getGrille())
+				
+				{
+					for(Case b : cas)
+					{  //Case b = this.grille[i][j];
+							if(b.etat)
+							{System.out.print("o ");
+							
+							 continue;
+							}
+							
+					     if(b.getBateau() != null)
+					     {
+					    	 System.out.print("b ");
+					     }
+					     else
+					     {
+					    	 System.out.print("x ");
+					     }
+							
+					}
+					System.out.println();
+				
 			
-		
-			}
-   }
+				}
+				
+	   }*/
+   
 
 }

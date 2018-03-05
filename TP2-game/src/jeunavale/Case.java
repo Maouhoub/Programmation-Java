@@ -42,6 +42,28 @@ public class Case
 	public void setBateau(Bateau bateau) {
 		this.bateau = bateau;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (etat ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Case other = (Case) obj;
+		if (etat != other.etat)
+			return false;
+		return true;
+	}
 	
 	
 	

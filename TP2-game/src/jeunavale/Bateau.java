@@ -1,17 +1,21 @@
 package jeunavale;
 
-
+import java.util.Arrays;
 
 /**
  * classe Bateau : représente un bateau dans le jeu.
  * @author MUSTAPHA
  *
  */
-public class Bateau 
+public  class Bateau 
 {   /**
      *champ private int : nombre des cases de ce Bateau
      */
 	private int taille;
+	
+	private boolean place = false;
+	
+	protected String Symbole ;
 	
 	/**
 	 * boolean indiquant l'orientation verticale(true) ou verticale
@@ -41,6 +45,8 @@ public class Bateau
 		
 		this.taille = taille;
 		this.cases = new Case[taille];
+		//for(Case c : this.cases) {c = new Case(); c.setBateau(this);}
+		
 	}
 
 	/**
@@ -58,11 +64,16 @@ public class Bateau
 	 */
 	public boolean estCoule()
 	{
-		boolean result = true;
+		boolean result = false;
 		for(Case c : this.cases)
 		{
-			if(c.etat == false)
-			 result = false;
+			if(c.etat == true)
+			 {
+				result = true;
+				break;
+			 
+			 }
+			
 			
 		}
 		return result;
@@ -81,7 +92,7 @@ public class Bateau
 		
 				{
 					this.cases[i] = c;
-					//System.out.println("Ajoutee");
+					System.out.println("Ajoutee");
 					c.setBateau(this);
 					ajoutee = 1;
 					break;
@@ -100,14 +111,45 @@ public class Bateau
 	public Case[] getCases() {
 		return cases;
 	}
+	
 
-	/**
-	 * modifier le tableau de cases de cet instance de Bateau
-	 * @param cases : tableau de cases
-	 */
-	public void setCases(Case[] cases) {
-		this.cases = cases;
+	public boolean isPlace() {
+		return place;
 	}
+
+	public void setPlace(boolean place) {
+		this.place = place;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(cases);
+		result = prime * result + (horizontal ? 1231 : 1237);
+		result = prime * result + taille;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Bateau other = (Bateau) obj;
+		if (!Arrays.equals(cases, other.cases))
+			return false;
+		if (horizontal != other.horizontal)
+			return false;
+		if (taille != other.taille)
+			return false;
+		return true;
+	}
+
+	//public abstract String getSymbole();
 	
 	
 	

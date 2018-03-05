@@ -7,11 +7,13 @@ package jeunavale;
  */
 public class Grille 
 {  
+	public static final int   NB_LIGNES = 11, NB_COLONNES = 10;
+	
 	
 	/**
     *Champ privé de type Case[][] : matrice de dimention 10*10 représente 100 objet Case d'un joueur
     */
-	private Case[][] grille = new Case[10][10];
+	private Case[][] grille = new Case[NB_LIGNES][NB_COLONNES];
 	
 	/**
 	 * Constructeur par défaut : tous les element de grille sont instancié par 
@@ -21,9 +23,9 @@ public class Grille
 	private Joueur joueur;
 	public Grille()
 	{
-		for(int i = 0; i < 10; ++i)
+		for(int i = 0; i < NB_LIGNES; ++i)
 		{
-			for(int j = 0; j < 10; ++j)
+			for(int j = 0; j < NB_COLONNES; ++j)
 			{
 				this.grille[i][j] = new Case();
 			}
@@ -91,5 +93,58 @@ public class Grille
 		this.joueur = joueur;
 	}
 	
-
+	  public void affiche()
+	   {     
+	
+	//	for(int i = 0; i < SIZE; i++) {for(int j = 0; j < SIZE; j++ )cases[i][j] = new Case();}
+		 
+		 for(Bateau bateau : this.getJoueur().getBateaux())
+		  {  
+		   if(bateau.estCoule()) 
+			  {
+				  for(Case c : bateau.getCases()) c.etat = true;
+			  }
+		  
+		  }
+				
+			   for(Case[] cas :this.grille)
+				
+				{
+					for(Case b : cas)
+					{  //Case b = this.grille[i][j];
+							if(b.etat)
+							{System.out.print("o ");
+							
+							 continue;
+							}
+							
+					     if(b.getBateau() != null)
+					     {
+					    	 System.out.print("b ");
+					     }
+					     else
+					     {
+					    	 System.out.print("x ");
+					     }
+							
+					}
+					System.out.println();
+				
+			
+				}
+				
+	   }
+	 /* private boolean isPartOfBoat(Case c)
+	  {
+		  	boolean isPartBoat = false;
+			for(Bateau bateau : this.getJoueur().getBateaux()) 
+				{
+				if(c.getBateau().equals(bateau))
+				{
+					isPartBoat = true;
+					break;
+				}
+				}
+			return isPartBoat;
+	  }*/
 }
